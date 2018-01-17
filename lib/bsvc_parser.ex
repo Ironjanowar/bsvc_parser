@@ -19,13 +19,6 @@ defmodule BsvcParser do
     send port, {self(), {:command, "#{command}\n"}}
   end
 
-  def receive_from_bsvc do
-    receive do
-      {_port, {:data, text}} -> IO.puts text
-      _ -> IO.puts "Unrecognized message from BSVC"
-    end
-  end
-
   def close() do
     GenServer.cast :parser, :close
   end
@@ -54,8 +47,8 @@ defmodule BsvcParser do
   # Infos
   def handle_info({port, {:data, {:eol, result}}}, %{port: port}=state) do
     result
-    |> remove_ready
     |> IO.puts
+    # |> remove_ready
 
     {:noreply, state}
   end
